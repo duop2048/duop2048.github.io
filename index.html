@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft UI Design System - Individual Waves</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body { background-color: #ffffff; overflow-x: hidden; }
+
+        /* 1. 상단 네비게이션 바 */
+        .navbar {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 1200px; background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); display: flex; justify-content: space-between;
+            align-items: center; padding: 12px 30px; border-radius: 50px;
+            z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* 로고를 흰색 원 안에 넣기 위한 스타일 */
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-circle {
+            width: 45px;
+            height: 45px;
+            background-color: #ffffff; /* 흰색 원 배경 */
+            border-radius: 50%;       /* 원형 만들기 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* 미세한 그림자 */
+            overflow: hidden;
+        }
+
+        .logo-img {
+            height: 30px; /* 원 안에서 적절한 크기 */
+            width: auto;
+            display: block;
+        }
+
+        .logo { font-weight: bold; color: #344767; font-size: 0.9rem; }
+        .menu { display: flex; gap: 50px; list-style: none; }
+        .nav-item { position: relative; }
+        .nav-item > a { text-decoration: none; color: #344767; font-size: 0.85rem; padding: 10px 0; display: block; }
+        
+        .dropdown {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: rgba(255, 255, 255, 0.95); min-width: 150px; padding: 15px 0;
+            border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); backdrop-filter: blur(10px);
+            list-style: none; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .nav-item:hover .dropdown { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .dropdown li a { display: block; padding: 8px 20px; text-decoration: none; color: #344767; font-size: 0.8rem; }
+        .dropdown li a:hover { color: #cb0c9f; background: rgba(52, 71, 103, 0.05); }
+
+        .nav-buttons .btn-sign-in {
+            background: #344767; color: white; border: none; padding: 10px 24px;
+            border-radius: 25px; cursor: pointer; font-size: 0.85rem; font-weight: bold;
+        }
+
+        /* 2. 히어로 섹션 */
+        .hero-section {
+            position: relative; height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; color: white;
+        }
+        .hero-content { margin-bottom: 120px; z-index: 2; }
+        .hero-content h1 { font-size: 3.5rem; font-weight: 700; }
+
+        /* 3. 🌊 파도 애니메이션 */
+        .waves-container {
+            position: absolute; bottom: 0; width: 100%; height: 10vh; min-height: 80px; z-index: 1;
+        }
+        .waves { width: 100%; height: 100%; }
+        .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
+        .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; opacity: 0.3; }
+        .parallax > use:nth-child(2) { animation-delay: -4s; animation-duration: 11s; opacity: 0.4; }
+        .parallax > use:nth-child(3) { animation-delay: -6s; animation-duration: 15s; opacity: 0.2; }
+        .parallax > use:nth-child(4) { animation-delay: -8s; animation-duration: 22s; opacity: 0.5; }
+        .parallax > use:nth-child(5) { animation-delay: -3s; animation-duration: 9s; opacity: 0.3; }
+        .parallax > use:nth-child(6) { animation-delay: -5s; animation-duration: 13s; opacity: 0.6; }
+        .parallax > use:nth-child(7) { animation-delay: -1s; animation-duration: 20s; fill: #fff; }
+
+        @keyframes move-forever {
+            0% { transform: translate3d(-90px, 0, 0); }
+            100% { transform: translate3d(85px, 0, 0); }
+        }
+
+        /* 4. 통계 카드 */
+        .stats-card {
+            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
+            width: 85%; max-width: 1000px; display: flex; justify-content: space-around;
+            padding: 50px 40px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07); color: #344767; z-index: 100;
+        }
+        .stat-item { flex: 1; text-align: center; }
+        .stat-item h2 { font-size: 2.5rem; color: #cb0c9f; margin-bottom: 10px; }
+        .divider { width: 1px; background: #e9ecef; margin: 15px 0; }
+        .footer-spacer { height: 150px; background-color: #ffffff; }
+
+        /* 모달 및 외부 버튼 레이아웃 */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
+        }
+        
+        .modal-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .login-window, .signup-window {
+            background: white; width: 400px; padding: 40px; border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
+        }
+
+        .signup-window { display: none; }
+
+        .login-window input, .signup-window input {
+            width: 100%; padding: 12px 15px; margin-bottom: 15px;
+            border: 1px solid #d2d6da; border-radius: 8px; outline: none;
+        }
+        .login-window button, .signup-window button {
+            width: 100%; padding: 12px; background: #344767; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+
+        .btn-create-account-outer {
+            width: 400px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.9) !important; 
+            backdrop-filter: blur(10px);
+            color: #344767 !important;
+            border: 1px solid #344767 !important; 
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: calc(0.85rem + 2pt);
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .btn-create-account-outer:hover { transform: translateY(-2px); background: #fff !important; }
+
+        .close-btn { 
+            display: inline-block;
+            margin-top: 10px; 
+            color: #ffffff;
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            font-weight: normal; 
+            text-decoration: underline;
+        }
+        
+        .modal-overlay.active { display: flex; opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content-wrapper">
+            <div class="login-window" id="loginWindow">
+                <h2 style="margin-bottom: 25px; color: #344767;">Sign In</h2>
+                <input type="text" id="loginEmail" placeholder="Email">
+                <input type="password" id="loginPassword" placeholder="Password">
+                <button id="loginBtn">Login</button>
+            </div>
+
+            <div class="signup-window" id="signupWindow">
+                <h2 style="margin-bottom: 25px; color: #344767;">Create Account</h2>
+                <input type="text" id="signupName" placeholder="Name">
+                <input type="text" id="signupEmail" placeholder="Email">
+                <input type="password" id="signupPassword" placeholder="Password">
+                <input type="password" id="signupConfirm" placeholder="Confirm Password">
+                <button id="signupSubmitBtn" style="background: #cb0c9f;">Sign Up</button>
+                <p id="backToLogin" style="margin-top: 15px; font-size: 0.8rem; color: #67748e; cursor: pointer; text-decoration: underline;">Already have an account? Sign In</p>
+            </div>
+            
+            <button class="btn-create-account-outer" id="createAccountBtn">Create Account</button>
+            
+            <div class="close-btn" id="closeBtn">Close Window</div>
+        </div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo-wrapper">
+            <div class="logo-circle">
+                <img src="DNH LOGO.png" alt="logo" class="logo-img">
+            </div>
+            <div class="logo">Dream & Hope</div>
+        </div>
+        <ul class="menu">
+            <li class="nav-item">
+                <a href="#">Home</a>
+                <ul class="dropdown">
+                    <li><a href="#">Overview</a></li>
+                    <li><a href="#">Features</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#">About</a>
+                <ul class="dropdown">
+                    <li><a href="#">Company</a></li>
+                    <li><a href="#">Team</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#">Service</a>
+                <ul class="dropdown">
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Development</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="#">Contact</a></li>
+        </ul>
+        <div class="nav-buttons"><button class="btn-sign-in" id="signInBtn">Sign in</button></div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Soft UI Design System 3</h1>
+            <p>Free & Open Source Web UI Kit built over Bootstrap 5.</p>
+        </div>
+
+        <div class="waves-container">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" /></defs>
+                <g class="parallax">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                    <use xlink:href="#gentle-wave" x="48" y="2" fill="rgba(255,255,255,0.5)" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.3)" />
+                    <use xlink:href="#gentle-wave" x="48" y="4" fill="rgba(255,255,255,0.4)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.2)" />
+                    <use xlink:href="#gentle-wave" x="48" y="6" fill="rgba(255,255,255,0.6)" />
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="stats-card">
+            <div class="stat-item"><h2>70+</h2><p>Elements</p></div>
+            <div class="divider"></div>
+            <div class="stat-item"><h2>15+</h2><p>Blocks</p></div>
+            <div class="divider"></div>
+            <div class="stat-item"><h2>4</h2><p>Pages</p></div>
+        </div>
+    </section>
+
+    <div class="footer-spacer"></div>
+
+    <script>
+        const signInBtn = document.getElementById('signInBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const createAccountBtn = document.getElementById('createAccountBtn');
+        const loginWindow = document.getElementById('loginWindow');
+        const signupWindow = document.getElementById('signupWindow');
+        const backToLogin = document.getElementById('backToLogin');
+
+        const signupName = document.getElementById('signupName');
+        const signupEmail = document.getElementById('signupEmail');
+        const signupPassword = document.getElementById('signupPassword');
+        const signupConfirm = document.getElementById('signupConfirm');
+        const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const loginBtn = document.getElementById('loginBtn');
+
+        let isLoggedIn = false;
+
+        signInBtn.addEventListener('click', () => { 
+            if (isLoggedIn) {
+                isLoggedIn = false;
+                signInBtn.innerText = 'Sign in';
+                alert("성공적으로 로그아웃되었습니다.");
+            } else {
+                modalOverlay.classList.add('active'); 
+                loginWindow.style.display = 'block';
+                signupWindow.style.display = 'none';
+                createAccountBtn.style.display = 'block';
+            }
+        });
+
+        createAccountBtn.addEventListener('click', () => {
+            loginWindow.style.display = 'none';
+            createAccountBtn.style.display = 'none';
+            signupWindow.style.display = 'block';
+        });
+
+        backToLogin.addEventListener('click', () => {
+            signupWindow.style.display = 'none';
+            loginWindow.style.display = 'block';
+            createAccountBtn.style.display = 'block';
+        });
+
+        signupSubmitBtn.addEventListener('click', () => {
+            const name = signupName.value;
+            const email = signupEmail.value;
+            const password = signupPassword.value;
+            const confirm = signupConfirm.value;
+
+            // [추가 부분] 이메일 유효성 검사 (정규표현식)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!name || !email || !password) { alert("모든 필드를 입력해주세요."); return; }
+            
+            // 이메일 형식 확인 로직
+            if (!emailRegex.test(email)) {
+                alert("유효한 이메일 주소를 입력해주세요. (예: example@domain.com)");
+                return;
+            }
+
+            if (password !== confirm) { alert("비밀번호가 일치하지 않습니다."); return; }
+            
+            localStorage.setItem(email, JSON.stringify({ name, email, password }));
+            alert("회원가입이 완료되었습니다! 로그인해 주세요.");
+            signupName.value = ''; signupEmail.value = ''; signupPassword.value = ''; signupConfirm.value = '';
+            backToLogin.click();
+        });
+
+        loginBtn.addEventListener('click', () => {
+            const email = loginEmail.value;
+            const password = loginPassword.value;
+            const storedUser = localStorage.getItem(email);
+            if (!storedUser) { alert("등록되지 않은 이메일입니다."); return; }
+            const userData = JSON.parse(storedUser);
+            if (userData.password === password) {
+                alert(`${userData.name}님, 환영합니다!`);
+                isLoggedIn = true;
+                signInBtn.innerText = 'Sign out';
+                modalOverlay.classList.remove('active');
+                loginEmail.value = ''; loginPassword.value = '';
+            } else { alert("비밀번호가 일치하지 않습니다."); }
+        });
+
+        closeBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) { modalOverlay.classList.remove('active'); } });
+    </script>
+</body>
+</html>

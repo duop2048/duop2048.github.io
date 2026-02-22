@@ -7,12 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
+        /* 기본 스타일 초기화 */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
         body { background-color: #ffffff; overflow-x: hidden; }
 
-        /* 1. 상단 네비게이션 바 */
+        /* 1. 상단 네비게이션 바 - 고정형(Fixed)으로 수정 */
         .navbar {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            position: fixed; /* absolute에서 fixed로 변경하여 스크롤 시 상단 고정 */
+            top: 20px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 1200px; background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px); display: flex; justify-content: space-between;
             align-items: center; padding: 12px 30px; border-radius: 50px;
@@ -86,7 +88,7 @@
 
         /* 4. 통계 카드 */
         .stats-card {
-            position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: -56px; left: 50%; transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px);
             width: 85%; max-width: 1000px; display: flex; justify-content: space-around;
             padding: 50px 40px; border-radius: 20px;

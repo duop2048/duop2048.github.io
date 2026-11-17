@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#687176">
+  <title>업무 절차 | 꿈과 희망 행정사무소</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #fff;
+      --muted: rgba(255, 255, 255, .78);
+      --accent: #df8ea8;
+      --photo-base: #6d767b;
+      --ease: cubic-bezier(.22, .68, 0, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: #f2f3f2;
+      font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      background: var(--photo-base);
+    }
+    .hero-video {
+      position: absolute;
+      z-index: -2;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      background-color: var(--photo-base);
+    }
+    .hero-shade {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15, 20, 24, .44), rgba(15, 20, 24, .34) 48%, rgba(15, 20, 24, .46));
+      transition: background .4s ease;
+      pointer-events: none;
+    }
+    .hero.is-scrolled .hero-shade {
+      background: linear-gradient(180deg, rgba(15, 20, 24, .50), rgba(15, 20, 24, .40) 48%, rgba(15, 20, 24, .52));
+    }
+
+    .site-header {
+      position: fixed;
+      z-index: 20;
+      inset: 0 0 auto;
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: clamp(150px, 12vw, 218px) minmax(0, 1fr) 46px;
+      align-items: center;
+      gap: clamp(16px, 3vw, 48px);
+      padding: 0 clamp(22px, 3.2vw, 58px);
+      border-bottom: 1px solid rgba(255, 255, 255, .18);
+      background: rgba(35, 42, 46, .12);
+      transition: background .3s ease, min-height .3s ease, border-color .3s ease;
+    }
+    .site-header.is-scrolled {
+      min-height: 76px;
+      background: #fff;
+      border-color: rgba(25, 28, 31, .08);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+    }
+    .site-header.menu-open,
+    .site-header.menu-open.is-scrolled {
+      background: #fff;
+      border-color: transparent;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .site-header.menu-open .main-nav {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .logo-space {
+      display: block;
+      width: clamp(150px, 12vw, 218px);
+      height: 46px;
+      transition: opacity .22s ease, visibility .22s ease;
+    }
+    .logo-space img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .site-header.menu-open .logo-space {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .main-nav {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: center;
+      width: 100%;
+      gap: 0;
+      transition: opacity .22s ease, visibility .22s ease;
+    }
+    .main-nav a {
+      min-width: 0;
+      padding: 14px 0;
+      color: rgba(255, 255, 255, .9);
+      font-size: clamp(14px, .92vw, 17px);
+      font-weight: 600;
+      letter-spacing: .045em;
+      text-align: center;
+      transition: color .2s ease, opacity .2s ease;
+    }
+    .site-header.is-scrolled .main-nav a { color: #202427; }
+    .main-nav a:hover,
+    .main-nav a:focus-visible { color: #fff; opacity: .68; }
+    .site-header.is-scrolled .main-nav a:hover,
+    .site-header.is-scrolled .main-nav a:focus-visible { color: #000; }
+    .nav-mega-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 calc(clamp(22px, 3.2vw, 58px) + 46px + clamp(16px, 3vw, 48px)) 0 calc(clamp(22px, 3.2vw, 58px) + clamp(150px, 12vw, 218px) + clamp(16px, 3vw, 48px));
+      background: rgba(255, 255, 255, .62);
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+      border-top: 1px solid rgba(25, 28, 31, .08);
+      box-shadow: 0 20px 36px rgba(18, 24, 28, .12);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: max-height .58s cubic-bezier(.2, .75, .25, 1), padding .58s cubic-bezier(.2, .75, .25, 1), opacity .28s ease, visibility 0s linear .58s;
+    }
+    .site-header.has-mega-open .nav-mega-menu {
+      max-height: 220px;
+      padding-top: 26px;
+      padding-bottom: 30px;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: max-height .58s cubic-bezier(.2, .75, .25, 1), padding .58s cubic-bezier(.2, .75, .25, 1), opacity .28s ease, visibility 0s;
+    }
+    .mega-menu-group { min-width: 0; text-align: center; }
+    .mega-menu-links {
+      display: grid;
+      gap: 10px;
+      padding: 14px 8px 0;
+    }
+    .mega-menu-links a {
+      color: #60686d;
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.4;
+      transition: color .18s ease;
+    }
+    .mega-menu-links a:hover,
+    .mega-menu-links a:focus-visible { color: #111; }
+
+    .menu-toggle {
+      justify-self: end;
+      width: 46px;
+      height: 46px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .menu-toggle span {
+      width: 23px;
+      height: 2px;
+      flex: 0 0 2px;
+      display: block;
+      border-radius: 999px;
+      background: #fff;
+      transform-origin: center;
+      transition: transform .25s ease, opacity .2s ease, background .25s ease;
+    }
+    .site-header.is-scrolled .menu-toggle span { background: #202427; }
+    .menu-toggle:hover span { opacity: .7; }
+    .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+      width: 23px;
+      transform: translateY(3.5px) rotate(45deg);
+    }
+    .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+      width: 23px;
+      transform: translateY(-3.5px) rotate(-45deg);
+    }
+    .site-header.menu-open .menu-toggle span { background: #000; }
+    .site-header.menu-open .menu-toggle[aria-expanded="true"] span:nth-child(1),
+    .site-header.menu-open .menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 1; }
+
+    .menu-overlay {
+      position: fixed;
+      z-index: 19;
+      inset: 0;
+      display: block;
+      overflow-y: scroll;
+      overscroll-behavior: contain;
+      scrollbar-gutter: stable;
+      padding: 0 24px;
+      background: #fff;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .28s ease, visibility 0s linear .28s;
+    }
+    .menu-overlay::after {
+      content: "";
+      display: block;
+      height: max(0px, calc(var(--menu-overlay-scroll-height, 162vh) - 100vh));
+    }
+    .menu-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity .28s ease, visibility 0s;
+    }
+    .overlay-nav {
+      position: fixed;
+      z-index: 1;
+      top: calc(50% + 35px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(680px, 100%);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 54px;
+    }
+    .overlay-nav a {
+      padding: 18px 2px;
+      border-bottom: 1px solid rgba(25, 28, 31, .14);
+      color: #202427;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 500;
+      letter-spacing: .04em;
+    }
+    .hero-copy {
+      width: min(1000px, calc(100% - 48px));
+      margin: 44px auto 0;
+      text-align: center;
+    }
+    .hero-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(40px, 5vw, 76px);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -.015em;
+      text-wrap: balance;
+    }
+    .hero-rule {
+      width: 42px;
+      height: 1px;
+      margin: 22px auto 18px;
+      background: rgba(255, 255, 255, .68);
+    }
+    .hero-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(17px, 1.25vw, 21px);
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: .005em;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: clamp(27px, 4.5vh, 50px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255, 255, 255, .9);
+      font-size: 13px;
+      letter-spacing: .02em;
+      pointer-events: none;
+      user-select: none;
+      cursor: default;
+      transform: translateX(-50%);
+      opacity: 1;
+      transition: opacity .45s ease, transform .45s var(--ease), visibility .45s ease;
+    }
+    .scroll-cue.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, 10px);
+      pointer-events: none;
+    }
+    .scroll-arrow {
+      width: 17px;
+      height: 20px;
+      display: block;
+      animation: arrow-bob 1.25s ease-in-out infinite;
+    }
+    @keyframes arrow-bob {
+      0%, 100% { transform: translateY(-3px); }
+      50% { transform: translateY(6px); }
+    }
+
+    .next-section {
+      min-height: 62vh;
+      background: #f2f3f2;
+    }
+
+    @media (max-width: 900px) {
+      .site-header {
+        grid-template-columns: 146px minmax(0, 1fr) 46px;
+        gap: 18px;
+        padding-inline: 22px;
+      }
+      .logo-space { width: 146px; }
+      .main-nav { gap: 0; }
+      .main-nav a { min-width: 0; font-size: 14px; }
+      .nav-mega-menu {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        padding-left: calc(22px + 146px + 18px);
+        padding-right: calc(22px + 46px + 18px);
+      }
+      .mega-menu-links { padding-inline: 3px; }
+      .mega-menu-links a { font-size: 11px; }
+    }
+    @media (max-width: 700px) {
+      .site-header { min-height: 68px; grid-template-columns: 1fr 46px; }
+      .site-header.is-scrolled { min-height: 68px; }
+      .logo-space { width: 150px; height: 42px; }
+      .main-nav { display: none; }
+      .nav-mega-menu { display: none; }
+      .menu-overlay { padding-top: 0; }
+      .overlay-nav { top: calc(50% + 25px); }
+      .overlay-nav { gap: 0 24px; }
+      .overlay-nav a { padding: 16px 0; font-size: clamp(20px, 6vw, 28px); }
+      .hero-copy { width: calc(100% - 36px); margin-top: 32px; }
+      .hero-title { font-size: clamp(34px, 9vw, 56px); }
+      .hero-rule { margin: 18px auto 14px; }
+      .hero-subtitle { font-size: 17px; }
+      .scroll-cue { bottom: 26px; font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="top">
+    <header class="site-header">
+      <a class="logo-space" href="index.html" aria-label="Dreams &amp; Hopes 홈"><img src="data:image/png;base64,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" alt="꿈과 희망 행정사사무소 로고"></a>
+      <nav class="main-nav" aria-label="주요 메뉴">
+        <a href="office(1).html">사무소 소개</a>
+        <a href="business(1).html">업무 분야</a>
+        <a href="process(1).html">업무 절차</a>
+        <a href="blog(1).html">블로그</a>
+        <a href="contact(1).html">상담 문의</a>
+      </nav>
+      <div class="nav-mega-menu" aria-label="전체 종속 메뉴">
+        <div class="mega-menu-group">
+          <div class="mega-menu-links">
+            <a href="#next">하위 메뉴 1</a>
+            <a href="#next">하위 메뉴 2</a>
+          </div>
+        </div>
+        <div class="mega-menu-group">
+          <div class="mega-menu-links">
+            <a href="#next">하위 메뉴 1</a>
+            <a href="#next">하위 메뉴 2</a>
+          </div>
+        </div>
+        <div class="mega-menu-group">
+          <div class="mega-menu-links">
+            <a href="#next">하위 메뉴 1</a>
+            <a href="#next">하위 메뉴 2</a>
+          </div>
+        </div>
+        <div class="mega-menu-group">
+          <div class="mega-menu-links">
+            <a href="#next">하위 메뉴 1</a>
+            <a href="#next">하위 메뉴 2</a>
+          </div>
+        </div>
+        <div class="mega-menu-group">
+          <div class="mega-menu-links">
+            <a href="#next">하위 메뉴 1</a>
+            <a href="#next">하위 메뉴 2</a>
+          </div>
+        </div>
+      </div>
+      <button class="menu-toggle" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="menuOverlay">
+        <span></span><span></span>
+      </button>
+    </header>
+
+    <section class="hero" aria-label="업무 절차">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="11955057_3840_2160_25fps.mp4" type="video/mp4">
+      </video>
+      <div class="hero-shade" aria-hidden="true"></div>
+
+
+
+      <div class="hero-copy">
+        <h1 class="hero-title">업무 절차</h1>
+        <div class="hero-rule" aria-hidden="true"></div>
+        <p class="hero-subtitle">텍스트 들어갈 부분</p>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <svg class="scroll-arrow" viewBox="0 0 20 24" fill="none" aria-hidden="true">
+          <path d="M10 2v17M3.5 13.5 10 20l6.5-6.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Scroll Down</span>
+      </div>
+    </section>
+
+    <section class="next-section" id="next" aria-label="다음 콘텐츠 영역"></section>
+  </main>
+
+  <div class="menu-overlay" id="menuOverlay" aria-hidden="true">
+    <nav class="overlay-nav" aria-label="전체 메뉴">
+        <a href="office(1).html">사무소 소개</a>
+        <a href="business(1).html">업무 분야</a>
+        <a href="process(1).html">업무 절차</a>
+        <a href="blog(1).html">블로그</a>
+        <a href="contact(1).html">상담 문의</a>
+      </nav>
+  </div>
+
+  <script>
+    const header = document.querySelector('.site-header');
+    const hero = document.querySelector('.hero');
+    const scrollCue = document.querySelector('.scroll-cue');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    const heroVideo = document.querySelector('.hero-video');
+    const mainNav = document.querySelector('.main-nav');
+    const megaMenu = document.querySelector('.nav-mega-menu');
+    let megaMenuCloseTimer;
+
+    function openMegaMenu() {
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches ||
+          menuToggle.getAttribute('aria-expanded') === 'true') return;
+      window.clearTimeout(megaMenuCloseTimer);
+      header.classList.add('has-mega-open');
+    }
+    function scheduleMegaMenuClose() {
+      window.clearTimeout(megaMenuCloseTimer);
+      megaMenuCloseTimer = window.setTimeout(() => {
+        header.classList.remove('has-mega-open');
+      }, 160);
+    }
+    function closeMegaMenu() {
+      window.clearTimeout(megaMenuCloseTimer);
+      header.classList.remove('has-mega-open');
+    }
+    mainNav.addEventListener('mouseenter', openMegaMenu);
+    mainNav.addEventListener('mouseleave', scheduleMegaMenuClose);
+    megaMenu.addEventListener('mouseenter', openMegaMenu);
+    megaMenu.addEventListener('mouseleave', scheduleMegaMenuClose);
+    megaMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMegaMenu);
+    });
+
+    function setBackgroundVideoSpeed() {
+      heroVideo.playbackRate = 0.85;
+    }
+    setBackgroundVideoSpeed();
+    heroVideo.addEventListener('loadedmetadata', setBackgroundVideoSpeed);
+
+    function updateScrollState() {
+      const scrolled = window.scrollY > 50;
+      header.classList.toggle('is-scrolled', scrolled);
+      hero.classList.toggle('is-scrolled', scrolled);
+      scrollCue.classList.toggle('is-hidden', scrolled);
+    }
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+
+    function setMenuOpen(open) {
+      if (open) closeMegaMenu();
+      if (open) {
+        const pageScrollHeight = document.documentElement.scrollHeight;
+        const pageScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        menuOverlay.style.setProperty('--menu-overlay-scroll-height', `${pageScrollHeight}px`);
+        header.style.right = pageScrollbarWidth > 0 ? `${pageScrollbarWidth}px` : '';
+        menuOverlay.scrollTop = 0;
+      } else {
+        header.style.right = '';
+      }
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? '전체 메뉴 닫기' : '전체 메뉴 열기');
+      header.classList.toggle('menu-open', open);
+      menuOverlay.classList.toggle('is-open', open);
+      menuOverlay.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    menuToggle.addEventListener('click', () => {
+      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    menuOverlay.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setMenuOpen(false));
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
+  </script>
+</body>
+</html>
